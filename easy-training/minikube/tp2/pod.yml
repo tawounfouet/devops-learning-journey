@@ -13,3 +13,4 @@ spec:
     env:
       - name: APP_COLOR
         value: red
+

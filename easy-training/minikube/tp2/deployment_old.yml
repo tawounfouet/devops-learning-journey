@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nginx
 spec:
-  replicas: 2
+  replicas: 2 
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,7 +20,8 @@ spec:
         app: nginx
     spec:
       containers:
-        - name: nginx
-          image: nginx:latest
-          ports:
-            - containerPort: 80
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
