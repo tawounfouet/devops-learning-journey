@@ -1,0 +1,12 @@
+
+
+
+```yml
+all:
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+prod:
+  hosts:
+    client1:
+      ansible_host: 192.168.99.11
+```

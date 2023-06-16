@@ -9,6 +9,7 @@ sudo sh get-docker.sh
 sudo usermod -aG docker vagrant
 systemctl start docker
 sudo yum -y install wget
+
 sudo wget https://storage.googleapis.com/minikube/releases/v1.28.0/minikube-linux-amd64
 sudo chmod +x minikube-linux-amd64
 sudo mv minikube-linux-amd64 /usr/bin/minikube

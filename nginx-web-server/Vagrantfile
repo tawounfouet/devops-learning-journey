@@ -1,0 +1,26 @@
+Vagrant.configure("2") do |config|
+    config.vm.define "webserver" do |webserver|
+      webserver.vm.box = "ubuntu/bionic64"  # Use Ubuntu 18.04 LTS image
+      webserver.vm.network "private_network", type: "static", ip: "192.168.200.10"
+      webserver.vm.hostname = "nginx-web-server"
+      webserver.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+        v.name = "nginx-web-server"
+        v.memory = 512
+        v.cpus = 1
+      end
+      webserver.vm.provision :shell, inline: <<-SHELL
+        # Inline shell commands here
+        # Print Ip address of the host machine 
+        echo "IP address of the host machine is: 192.168.200.10" 
+        ip addr show eth1 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
+        
+      SHELL
+      #webserver.vm.provision :shell do |shell|
+        #shell.path = "port_forwarding.sh"
+        #shell.args = ["webserver", "192.168.200.10"]
+      #end
+    end
+  end
+  

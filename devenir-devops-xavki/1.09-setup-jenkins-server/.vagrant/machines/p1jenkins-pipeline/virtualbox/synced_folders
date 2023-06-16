@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"/Users/awf/Projects/DevOps/devenir-devops-xavki/1.10-vagrant-srv","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

@@ -1,0 +1,1 @@
+## Installation MiniKFvagrant box add --insecure arrikto/minikf

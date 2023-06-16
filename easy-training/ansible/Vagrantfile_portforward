@@ -1,0 +1,50 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# To enable zsh, please set ENABLE_ZSH env var to "true" before launching vagrant up
+#   + On windows => $env:ENABLE_ZSH="true"
+#   + On Linux  => export ENABLE_ZSH="true"
+
+Vagrant.configure("2") do |config|
+  config.vm.define "ansible" do |ansible|
+    ansible.vm.box = "geerlingguy/centos7"
+    ansible.vm.network "private_network", type: "static", ip: "192.168.99.10"
+    ansible.vm.hostname = "ansible"
+    ansible.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+      v.name = "ansible"
+      v.memory = 2048
+      v.cpus = 2
+      v.forwarded_port "ansible-ssh", guest: 22, host: 2222
+    end
+    ansible.vm.provision :shell do |shell|
+      shell.path = "install_ansible.sh"
+      shell.args = ["master", "192.168.99.10"]
+      shell.env = { 'ENABLE_ZSH' => ENV['ENABLE_ZSH'] }
+    end
+  end
+
+  clients = 1
+  ram_client = 1024
+  cpu_client = 1
+
+  (1..clients).each do |i|
+    config.vm.define "client#{i}" do |client|
+      client.vm.box = "geerlingguy/centos7"
+      client.vm.network "private_network", type: "static", ip: "192.168.99.1#{i}"
+      client.vm.hostname = "client#{i}"
+      client.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+        v.name = "client#{i}"
+        v.memory = ram_client
+        v.cpus = cpu_client
+        v.forwarded_port "client#{i}-ssh", guest: 22, host: 2222 + i
+      end
+      client.vm.provision :shell do |shell|
+        shell.path = "install_ansible.sh"
+        shell.args = ["node", "192.168.99.10"]
+      end
+    end
+  end
+end

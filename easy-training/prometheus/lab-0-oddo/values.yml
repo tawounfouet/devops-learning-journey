@@ -1,0 +1,12 @@
+service:
+  type: NodePort
+  port: 80
+  nodePort: "30069"
+
+persistence:
+  enabled: false
+
+postgresql:
+  enabled: true
+  persistence:
+    enabled: true

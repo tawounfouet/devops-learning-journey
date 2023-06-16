@@ -1,0 +1,38 @@
+version: '3.3'
+services:
+    static-website-eazy:
+        container_name: static-website-eazy
+#        ports:
+#            - "80:80"
+        image: tawounfouet/static-website-easzy
+        environment:
+            - VIRTUAL_HOST=awf-digitalizer.com
+            - LETSENCRYPT_HOST=awf-digitalizer.com
+    nginx-proxy:
+        image: jwilder/nginx-proxy
+        container_name: nginx-proxy
+        ports:
+            - "80:80"
+            - "443:443"
+        environment:
+            - DHPARAM_GENERATION="false"
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - ./etc/nginx/certs:/etc/nginx/certs
+            - ./etc/nginx/vhost.d:/etc/nginx/vhost.d
+            - nginx_proxy_html:/usr/share/nginx/html
+    nginx-proxy-letencrypt:
+        image: jrcs/letsencrypt-nginx-proxy-companion
+        container_name: nginx-proxy-letencrypt
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./etc/nginx/certs:/etc/nginx/certs
+            - ./etc/nginx/vhost.d:/etc/nginx/vhost.d
+            - nginx_proxy_html:/usr/share/nginx/html
+        environment:
+            - DEFAULT_EMAIL = thomas.awounfouet@gmail.com
+            - NGINX_PROXY_CONTAINER=nginx-proxy
+      
+volumes:
+    nginx_proxy_html:
+

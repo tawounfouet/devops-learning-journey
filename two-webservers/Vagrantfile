@@ -1,0 +1,28 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config| 
+    webservers=2
+    ram_server=512
+    cpu_server=1
+
+    (1..webservers).each do |i|
+      config.vm.define "webserver#{i}" do |webserver|
+        webserver.vm.box = "ubuntu/bionic64"  # Use Ubuntu 18.04 LTS image
+        #webserver.vm.box = "geerlingguy/centos7"
+        webserver.vm.network "private_network", type: "static", ip: "192.168.200.1#{i}"
+        webserver.vm.hostname = "k8Sworker#{i}"
+        webserver.vm.provider "virtualbox" do |v|
+          v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+          v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+          v.name = "webserver#{i}"
+          v.memory = ram_server
+          v.cpus = cpu_server
+        end
+        # webserver.vm.provision :shell do |shell|
+        #   shell.path = "install_kubernetes.sh"
+        #   shell.args = ["node", "192.168.99.10"]
+        # end
+      end
+    end
+  end
