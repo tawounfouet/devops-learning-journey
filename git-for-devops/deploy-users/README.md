@@ -1,1 +1,1 @@
-This folder create user
+This folder create user using bash powershell
